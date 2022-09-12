@@ -1,1 +1,3 @@
-export const Reviews = () => {};
+export const Reviews = () => {
+  return 'kości';
+};

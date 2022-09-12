@@ -1,6 +1,5 @@
-import { nanoid } from 'nanoid';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, Outlet, useParams } from 'react-router-dom';
 import { fetchMovieDetails } from 'services/api';
 
 export const MovieDetailsPage = () => {
@@ -21,8 +20,6 @@ export const MovieDetailsPage = () => {
     }
   };
 
-  console.log(movieById);
-
   const {
     poster_path,
     original_title,
@@ -30,41 +27,51 @@ export const MovieDetailsPage = () => {
     overview,
     release_date,
     genres,
-    taglines,
   } = movieById;
-  console.log(genres);
-  // const genresList = genres.map(({ n, id }) => <p key={id}> {n.name} </p>);
-  // const year = new Date(release_date).getFullYear();
-  // const roundVoteAvg = (+vote_average).toFixed(0);
+
+  const year = new Date(release_date).getFullYear();
+  const roundVoteAvg = (+vote_average).toFixed(0);
   return (
     <>
-      <div className="movieDetails__image">
-        <img
-          src={`https://image.tmdb.org/t/p/w500${poster_path}`}
-          alt={taglines}
-        />
+      <div className="movieDetails__container--upper_block">
+        <div className="movieDetails__image">
+          <img
+            src={
+              poster_path
+                ? `https://image.tmdb.org/t/p/w500${poster_path}`
+                : 'https://restorixhealth.com/wp-content/uploads/2018/08/No-Image-684x1024.png'
+            }
+            alt={original_title}
+            width="250"
+          />
+        </div>
+        <div className="movieDetails__info">
+          <h3>
+            {original_title} ({year})
+          </h3>
+          <p>Vote Average: {roundVoteAvg}</p>
+          <h4>Overview</h4>
+          <p>{overview}</p>
+          <h4>Genres</h4>
+          <p>
+            {genres?.map(({ id, name }) => (
+              <span key={id}>{name} </span>
+            ))}
+          </p>
+        </div>
       </div>
-      <div className="movieDetails__info">
-        <h3>
-          {original_title} ({release_date})
-        </h3>
-        <p>Vote Average: {vote_average}</p>
-        <h4>Overview</h4>
-        <p>{overview}</p>
-        <h4>Genres</h4>
-        <p>
-          zjebane genres
-          {genres.map(genre => {
-            return <span key={nanoid()}>{genre.name}</span>;
-          })}
-        </p>
-      </div>
+
       <div className="movieDetails__additionalInfo">
         <p>Additional information</p>
         <ul>
-          <li>Cast</li>
-          <li>Reviews</li>
+          <li>
+            <Link to="cast">Cast</Link>
+          </li>
+          <li>
+            <Link to="reviews">Reviews</Link>
+          </li>
         </ul>
+        <Outlet />
       </div>
     </>
   );
