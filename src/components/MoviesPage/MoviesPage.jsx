@@ -1,11 +1,16 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { Form } from './MoviesStyles';
 
 export const MoviesPage = ({ onSubmit, movies }) => {
   const [inptValue, setInptValue] = useState('');
+  const location = useLocation();
+  // eslint-disable-next-line no-unused-vars
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const handleChange = e => {
     setInptValue(e.target.value);
+    setSearchParams({ query: e.target.value });
   };
 
   const handleSubmit = e => {
@@ -16,7 +21,7 @@ export const MoviesPage = ({ onSubmit, movies }) => {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
         <input
           type="text"
           name="movieName"
@@ -31,11 +36,13 @@ export const MoviesPage = ({ onSubmit, movies }) => {
         >
           Search
         </button>
-      </form>
+      </Form>
       <ul>
         {movies.map(({ id, title, name }) => (
           <li key={id}>
-            <Link to={`${id}`}>{title ? title : name}</Link>
+            <Link to={`${id}`} state={location}>
+              {title ? title : name}
+            </Link>
           </li>
         ))}
       </ul>

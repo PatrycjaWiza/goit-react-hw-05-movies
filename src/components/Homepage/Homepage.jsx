@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 
 export const Homepage = ({ trendingMovies }) => {
+  // const location = useLocation();
+
   return (
     <>
       <h2>Trending today</h2>

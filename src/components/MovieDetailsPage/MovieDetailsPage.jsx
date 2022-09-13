@@ -1,10 +1,13 @@
-import { useEffect, useState } from 'react';
-import { Link, Outlet, useParams } from 'react-router-dom';
+import { Suspense, useEffect, useState } from 'react';
+import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
 import { fetchMovieDetails } from 'services/api';
+import { AdditionalInfo, LinkBtn, MovieDetails } from './MoviesDetailsStyles';
 
 export const MovieDetailsPage = () => {
   const { movieId } = useParams();
   const [movieById, setMovieById] = useState({});
+  const location = useLocation();
+  const backLinkDefault = location.state ? '/movies' : '/';
 
   useEffect(() => {
     renderDetails(movieId);
@@ -33,7 +36,8 @@ export const MovieDetailsPage = () => {
   const roundVoteAvg = (+vote_average).toFixed(0);
   return (
     <>
-      <div className="movieDetails__container--upper_block">
+      <LinkBtn to={backLinkDefault}>&larr;Go back</LinkBtn>
+      <MovieDetails className="movieDetails__container--upper_block">
         <div className="movieDetails__image">
           <img
             src={
@@ -59,20 +63,26 @@ export const MovieDetailsPage = () => {
             ))}
           </p>
         </div>
-      </div>
+      </MovieDetails>
 
-      <div className="movieDetails__additionalInfo">
+      <AdditionalInfo className="movieDetails__additionalInfo">
         <p>Additional information</p>
         <ul>
           <li>
-            <Link to="cast">Cast</Link>
+            <Link to="cast" state={location.state}>
+              Cast
+            </Link>
           </li>
           <li>
-            <Link to="reviews">Reviews</Link>
+            <Link to="reviews" state={location.state}>
+              Reviews
+            </Link>
           </li>
         </ul>
-        <Outlet />
-      </div>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Outlet />
+        </Suspense>
+      </AdditionalInfo>
     </>
   );
 };

@@ -1,11 +1,27 @@
-import { useEffect, useState } from 'react';
-import { Link, Route, Routes } from 'react-router-dom';
+import { Suspense, useEffect, useState, lazy } from 'react';
+import { Route, Routes } from 'react-router-dom';
 import { searchMovies, fetchTrendingMovies } from 'services/api';
-import { Homepage } from './Homepage/Homepage';
-import { MoviesPage } from './MoviesPage/MoviesPage';
-import { MovieDetailsPage } from './MovieDetailsPage/MovieDetailsPage';
-import { Cast } from './Cast/Cast';
-import { Reviews } from './Reviews/Reviews';
+import { Nav, StyledLink } from './NavLinkStyles';
+
+const Homepage = lazy(() =>
+  import('./Homepage/Homepage').then(module => ({ default: module.Homepage }))
+);
+const MoviesPage = lazy(() =>
+  import('./MoviesPage/MoviesPage').then(module => ({
+    default: module.MoviesPage,
+  }))
+);
+const MovieDetailsPage = lazy(() =>
+  import('./MovieDetailsPage/MovieDetailsPage').then(module => ({
+    default: module.MovieDetailsPage,
+  }))
+);
+const Cast = lazy(() =>
+  import('./Cast/Cast').then(module => ({ default: module.Cast }))
+);
+const Reviews = lazy(() =>
+  import('./Reviews/Reviews').then(module => ({ default: module.Reviews }))
+);
 
 export const App = () => {
   const [movies, setMovies] = useState([]);
@@ -49,11 +65,11 @@ export const App = () => {
   };
 
   return (
-    <div>
-      <nav>
-        <Link to="/">Home</Link>
-        <Link to="/movies">Movies</Link>
-      </nav>
+    <Suspense fallback={<div>Loading...</div>}>
+      <Nav>
+        <StyledLink to="/">Home</StyledLink>
+        <StyledLink to="/movies">Movies</StyledLink>
+      </Nav>
 
       <Routes>
         <Route
@@ -77,6 +93,6 @@ export const App = () => {
       </Routes>
 
       {error && <p> {error.message} </p>}
-    </div>
+    </Suspense>
   );
 };

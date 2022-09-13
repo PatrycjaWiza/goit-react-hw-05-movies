@@ -24,22 +24,21 @@ export const Cast = () => {
   return (
     <ul>
       {castCredits?.map(({ id, original_name, character, profile_path }) => (
-        <>
+        <div key={id}>
           <img
-            key={id}
             src={
               profile_path
                 ? `https://image.tmdb.org/t/p/w500${profile_path}`
                 : 'https://restorixhealth.com/wp-content/uploads/2018/08/No-Image-684x1024.png'
             }
-            alt={original_name}
+            alt=""
             width="100"
           />
           <li className="crew__container">
             <p>{original_name}</p>
             <p>Character: {character}</p>
           </li>
-        </>
+        </div>
       ))}
     </ul>
   );
